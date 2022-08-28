@@ -4,6 +4,7 @@
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^3.0.0",
+    "dotenv": "^16.0.1",
     "zeppelin-solidity": "1.2.0"
   },
   "name": "vgr",
@@ -14,16 +15,11 @@
     "test": "test"
   },
   "devDependencies": {
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-register": "^6.26.0"
   },
   "scripts": {
     "test": "truffle test",
     "compile": "truffle compile"
   },
-
   "keywords": [
     "virtualground",
     "vgr",
