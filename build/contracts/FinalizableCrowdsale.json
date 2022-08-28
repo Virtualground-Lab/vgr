@@ -1,0 +1,689 @@
+{
+  "contractName": "FinalizableCrowdsale",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "endBlock",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "rate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "weiRaised",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "startBlock",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "finalize",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "wallet",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "isFinalized",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "beneficiary",
+          "type": "address"
+        }
+      ],
+      "name": "buyTokens",
+      "outputs": [],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "hasEnded",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    },
+    {
+      "anonymous": false,
+      "inputs": [],
+      "name": "Finalized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "purchaser",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "beneficiary",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "TokenPurchase",
+      "type": "event"
+    }
+  ],
+  "metadata": "",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.11;\n\nimport '../math/SafeMath.sol';\nimport '../ownership/Ownable.sol';\nimport './Crowdsale.sol';\n\n/**\n * @title FinalizableCrowdsale\n * @dev Extension of Crowsdale where an owner can do extra work\n * after finishing. By default, it will end token minting.\n */\ncontract FinalizableCrowdsale is Crowdsale, Ownable {\n  using SafeMath for uint256;\n\n  bool public isFinalized = false;\n\n  event Finalized();\n\n  // should be called after crowdsale ends, to do\n  // some extra finalization work\n  function finalize() onlyOwner {\n    require(!isFinalized);\n    require(hasEnded());\n\n    finalization();\n    Finalized();\n    \n    isFinalized = true;\n  }\n\n  // end token minting on finalization\n  // override this with custom logic if needed\n  function finalization() internal {\n    token.finishMinting();\n  }\n\n\n\n}\n",
+  "sourcePath": "zeppelin-solidity/contracts/crowdsale/FinalizableCrowdsale.sol",
+  "legacyAST": {
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".11"
+          ]
+        },
+        "id": 1369,
+        "name": "PragmaDirective",
+        "src": "0:24:9"
+      },
+      {
+        "attributes": {
+          "file": "../math/SafeMath.sol"
+        },
+        "id": 1370,
+        "name": "ImportDirective",
+        "src": "26:30:9"
+      },
+      {
+        "attributes": {
+          "file": "../ownership/Ownable.sol"
+        },
+        "id": 1371,
+        "name": "ImportDirective",
+        "src": "57:34:9"
+      },
+      {
+        "attributes": {
+          "file": "./Crowdsale.sol"
+        },
+        "id": 1372,
+        "name": "ImportDirective",
+        "src": "92:25:9"
+      },
+      {
+        "attributes": {
+          "fullyImplemented": false,
+          "isLibrary": false,
+          "linearizedBaseContracts": [
+            1420,
+            1627,
+            1367
+          ],
+          "name": "FinalizableCrowdsale"
+        },
+        "children": [
+          {
+            "children": [
+              {
+                "attributes": {
+                  "name": "Crowdsale"
+                },
+                "id": 1373,
+                "name": "UserDefinedTypeName",
+                "src": "314:9:9"
+              }
+            ],
+            "id": 1374,
+            "name": "InheritanceSpecifier",
+            "src": "314:9:9"
+          },
+          {
+            "children": [
+              {
+                "attributes": {
+                  "name": "Ownable"
+                },
+                "id": 1375,
+                "name": "UserDefinedTypeName",
+                "src": "325:7:9"
+              }
+            ],
+            "id": 1376,
+            "name": "InheritanceSpecifier",
+            "src": "325:7:9"
+          },
+          {
+            "children": [
+              {
+                "attributes": {
+                  "name": "SafeMath"
+                },
+                "id": 1377,
+                "name": "UserDefinedTypeName",
+                "src": "343:8:9"
+              },
+              {
+                "attributes": {
+                  "name": "uint256"
+                },
+                "id": 1378,
+                "name": "ElementaryTypeName",
+                "src": "356:7:9"
+              }
+            ],
+            "id": 1379,
+            "name": "UsingForDirective",
+            "src": "337:27:9"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "isFinalized",
+              "storageLocation": "default",
+              "type": "bool",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "bool"
+                },
+                "id": 1380,
+                "name": "ElementaryTypeName",
+                "src": "368:4:9"
+              },
+              {
+                "attributes": {
+                  "hexvalue": "66616c7365",
+                  "subdenomination": null,
+                  "token": "false",
+                  "type": "bool",
+                  "value": "false"
+                },
+                "id": 1381,
+                "name": "Literal",
+                "src": "394:5:9"
+              }
+            ],
+            "id": 1382,
+            "name": "VariableDeclaration",
+            "src": "368:31:9"
+          },
+          {
+            "attributes": {
+              "name": "Finalized"
+            },
+            "children": [
+              {
+                "children": [],
+                "id": 1383,
+                "name": "ParameterList",
+                "src": "419:2:9"
+              }
+            ],
+            "id": 1384,
+            "name": "EventDefinition",
+            "src": "404:18:9"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "finalize",
+              "payable": false,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [],
+                "id": 1385,
+                "name": "ParameterList",
+                "src": "527:2:9"
+              },
+              {
+                "children": [],
+                "id": 1388,
+                "name": "ParameterList",
+                "src": "540:0:9"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "type": "modifier ()",
+                      "value": "onlyOwner"
+                    },
+                    "id": 1386,
+                    "name": "Identifier",
+                    "src": "530:9:9"
+                  }
+                ],
+                "id": 1387,
+                "name": "ModifierInvocation",
+                "src": "530:9:9"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "function (bool)",
+                              "value": "require"
+                            },
+                            "id": 1389,
+                            "name": "Identifier",
+                            "src": "546:7:9"
+                          },
+                          {
+                            "attributes": {
+                              "operator": "!",
+                              "prefix": true,
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "type": "bool",
+                                  "value": "isFinalized"
+                                },
+                                "id": 1390,
+                                "name": "Identifier",
+                                "src": "555:11:9"
+                              }
+                            ],
+                            "id": 1391,
+                            "name": "UnaryOperation",
+                            "src": "554:12:9"
+                          }
+                        ],
+                        "id": 1392,
+                        "name": "FunctionCall",
+                        "src": "546:21:9"
+                      }
+                    ],
+                    "id": 1393,
+                    "name": "ExpressionStatement",
+                    "src": "546:21:9"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "function (bool)",
+                              "value": "require"
+                            },
+                            "id": 1394,
+                            "name": "Identifier",
+                            "src": "573:7:9"
+                          },
+                          {
+                            "attributes": {
+                              "type": "bool",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "type": "function () constant returns (bool)",
+                                  "value": "hasEnded"
+                                },
+                                "id": 1395,
+                                "name": "Identifier",
+                                "src": "581:8:9"
+                              }
+                            ],
+                            "id": 1396,
+                            "name": "FunctionCall",
+                            "src": "581:10:9"
+                          }
+                        ],
+                        "id": 1397,
+                        "name": "FunctionCall",
+                        "src": "573:19:9"
+                      }
+                    ],
+                    "id": 1398,
+                    "name": "ExpressionStatement",
+                    "src": "573:19:9"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "function ()",
+                              "value": "finalization"
+                            },
+                            "id": 1399,
+                            "name": "Identifier",
+                            "src": "599:12:9"
+                          }
+                        ],
+                        "id": 1400,
+                        "name": "FunctionCall",
+                        "src": "599:14:9"
+                      }
+                    ],
+                    "id": 1401,
+                    "name": "ExpressionStatement",
+                    "src": "599:14:9"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "function () constant",
+                              "value": "Finalized"
+                            },
+                            "id": 1402,
+                            "name": "Identifier",
+                            "src": "619:9:9"
+                          }
+                        ],
+                        "id": 1403,
+                        "name": "FunctionCall",
+                        "src": "619:11:9"
+                      }
+                    ],
+                    "id": 1404,
+                    "name": "ExpressionStatement",
+                    "src": "619:11:9"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "operator": "=",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "bool",
+                              "value": "isFinalized"
+                            },
+                            "id": 1405,
+                            "name": "Identifier",
+                            "src": "641:11:9"
+                          },
+                          {
+                            "attributes": {
+                              "hexvalue": "74727565",
+                              "subdenomination": null,
+                              "token": "true",
+                              "type": "bool",
+                              "value": "true"
+                            },
+                            "id": 1406,
+                            "name": "Literal",
+                            "src": "655:4:9"
+                          }
+                        ],
+                        "id": 1407,
+                        "name": "Assignment",
+                        "src": "641:18:9"
+                      }
+                    ],
+                    "id": 1408,
+                    "name": "ExpressionStatement",
+                    "src": "641:18:9"
+                  }
+                ],
+                "id": 1409,
+                "name": "Block",
+                "src": "540:124:9"
+              }
+            ],
+            "id": 1410,
+            "name": "FunctionDefinition",
+            "src": "510:154:9"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "finalization",
+              "payable": false,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [],
+                "id": 1411,
+                "name": "ParameterList",
+                "src": "775:2:9"
+              },
+              {
+                "children": [],
+                "id": 1412,
+                "name": "ParameterList",
+                "src": "787:0:9"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "bool",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "member_name": "finishMinting",
+                              "type": "function () external returns (bool)"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "type": "contract MintableToken",
+                                  "value": "token"
+                                },
+                                "id": 1413,
+                                "name": "Identifier",
+                                "src": "793:5:9"
+                              }
+                            ],
+                            "id": 1415,
+                            "name": "MemberAccess",
+                            "src": "793:19:9"
+                          }
+                        ],
+                        "id": 1416,
+                        "name": "FunctionCall",
+                        "src": "793:21:9"
+                      }
+                    ],
+                    "id": 1417,
+                    "name": "ExpressionStatement",
+                    "src": "793:21:9"
+                  }
+                ],
+                "id": 1418,
+                "name": "Block",
+                "src": "787:32:9"
+              }
+            ],
+            "id": 1419,
+            "name": "FunctionDefinition",
+            "src": "754:65:9"
+          }
+        ],
+        "id": 1420,
+        "name": "ContractDefinition",
+        "src": "281:543:9"
+      }
+    ],
+    "name": "SourceUnit"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.11+commit.68ef5810.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.8",
+  "updatedAt": "2022-08-28T18:35:01.373Z",
+  "devdoc": {
+    "methods": {
+      "transferOwnership(address)": {
+        "details": "Allows the current owner to transfer control of the contract to a newOwner.",
+        "params": {
+          "newOwner": "The address to transfer ownership to."
+        }
+      }
+    },
+    "title": "FinalizableCrowdsale"
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

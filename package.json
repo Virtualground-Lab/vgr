@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.14",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "zeppelin-solidity": "1.2.0"
+  },
+  "name": "vgr",
+  "version": "1.0.0",
+  "description": "Solidity Contracts for the Virtualground VGR token",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.26.0"
+  },
+  "scripts": {
+    "test": "truffle test",
+    "compile": "truffle compile"
+  },
+
+  "keywords": [
+    "virtualground",
+    "vgr",
+    "solidity",
+    "smart-contract"
+  ],
+  "author": "Abhishek Chauhan",
+  "license": "MIT"
+}
