@@ -8,7 +8,7 @@
   <p align="center">
     Virtualground(VGR) Token
   </p>
-  <a href="#">Link</a> 
+  <a href="virtualground.it">Link</a> 
   <p align="center">
     VGR is ERC20 token designed for virtualground platform.
   </p>
