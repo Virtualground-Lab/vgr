@@ -1,6 +1,6 @@
 const BigNumber = web3.BigNumber;
 
-export const should = require("chai")
+const should = require("chai")
   .use(require("chai-as-promised"))
   .use(require("chai-bignumber")(BigNumber))
   .should();

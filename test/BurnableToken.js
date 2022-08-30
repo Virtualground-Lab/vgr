@@ -6,7 +6,7 @@ const BurnableTokenMock = artifacts.require("./helpers/BurnableTokenMock.sol");
 
 const BigNumber = web3.BigNumber;
 
-contract("BurnableToken", function (accounts) {
+describe("BurnableToken", function (accounts) {
   let token;
   let expectedTokenSupply = new BigNumber(900);
 

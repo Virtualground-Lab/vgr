@@ -1,0 +1,879 @@
+{
+  "contractName": "WhitelistedCrowdsale",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "endBlock",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "rate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "buyer",
+          "type": "address"
+        }
+      ],
+      "name": "isWhitelisted",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "weiRaised",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "startBlock",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "wallet",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "whitelist",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "buyer",
+          "type": "address"
+        }
+      ],
+      "name": "addToWhitelist",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "beneficiary",
+          "type": "address"
+        }
+      ],
+      "name": "buyTokens",
+      "outputs": [],
+      "payable": true,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "hasEnded",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "payable": true,
+      "type": "fallback"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "purchaser",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "beneficiary",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "TokenPurchase",
+      "type": "event"
+    }
+  ],
+  "metadata": "",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.11;\n\nimport \"zeppelin-solidity/contracts/math/SafeMath.sol\";\nimport \"zeppelin-solidity/contracts/crowdsale/Crowdsale.sol\";\n\n/**\n * @title WhitelistedCrowdsale\n * @dev Extension of Crowsdale where an owner can whitelist addresses\n * which can buy in crowdsale before it opens to the public\n */\ncontract WhitelistedCrowdsale is Crowdsale, Ownable {\n    using SafeMath for uint256;\n\n    // list of addresses that can purchase before crowdsale opens\n    mapping(address => bool) public whitelist;\n\n    function addToWhitelist(address buyer) public onlyOwner {\n        require(buyer != 0x0);\n        whitelist[buyer] = true;\n    }\n\n    // @return true if buyer is whitelisted\n    function isWhitelisted(address buyer) public constant returns (bool) {\n        return whitelist[buyer];\n    }\n\n    // overriding Crowdsale#validPurchase to add whitelist logic\n    // @return true if buyers can buy at the moment\n    function validPurchase() internal constant returns (bool) {\n        // [TODO] issue with overriding and associativity of logical operators\n        return\n            super.validPurchase() || (!hasEnded() && isWhitelisted(msg.sender));\n    }\n}\n",
+  "sourcePath": "/Users/ac12644/Desktop/vgr/contracts/WhitelistedCrowdsale.sol",
+  "legacyAST": {
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.4",
+            ".11"
+          ]
+        },
+        "id": 961,
+        "name": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "attributes": {
+          "file": "zeppelin-solidity/contracts/math/SafeMath.sol"
+        },
+        "id": 962,
+        "name": "ImportDirective",
+        "src": "26:55:5"
+      },
+      {
+        "attributes": {
+          "file": "zeppelin-solidity/contracts/crowdsale/Crowdsale.sol"
+        },
+        "id": 963,
+        "name": "ImportDirective",
+        "src": "82:61:5"
+      },
+      {
+        "attributes": {
+          "fullyImplemented": false,
+          "isLibrary": false,
+          "linearizedBaseContracts": [
+            1027,
+            1570,
+            1310
+          ],
+          "name": "WhitelistedCrowdsale"
+        },
+        "children": [
+          {
+            "children": [
+              {
+                "attributes": {
+                  "name": "Crowdsale"
+                },
+                "id": 964,
+                "name": "UserDefinedTypeName",
+                "src": "347:9:5"
+              }
+            ],
+            "id": 965,
+            "name": "InheritanceSpecifier",
+            "src": "347:9:5"
+          },
+          {
+            "children": [
+              {
+                "attributes": {
+                  "name": "Ownable"
+                },
+                "id": 966,
+                "name": "UserDefinedTypeName",
+                "src": "358:7:5"
+              }
+            ],
+            "id": 967,
+            "name": "InheritanceSpecifier",
+            "src": "358:7:5"
+          },
+          {
+            "children": [
+              {
+                "attributes": {
+                  "name": "SafeMath"
+                },
+                "id": 968,
+                "name": "UserDefinedTypeName",
+                "src": "378:8:5"
+              },
+              {
+                "attributes": {
+                  "name": "uint256"
+                },
+                "id": 969,
+                "name": "ElementaryTypeName",
+                "src": "391:7:5"
+              }
+            ],
+            "id": 970,
+            "name": "UsingForDirective",
+            "src": "372:27:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "whitelist",
+              "storageLocation": "default",
+              "type": "mapping(address => bool)",
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address"
+                    },
+                    "id": 971,
+                    "name": "ElementaryTypeName",
+                    "src": "479:7:5"
+                  },
+                  {
+                    "attributes": {
+                      "name": "bool"
+                    },
+                    "id": 972,
+                    "name": "ElementaryTypeName",
+                    "src": "490:4:5"
+                  }
+                ],
+                "id": 973,
+                "name": "Mapping",
+                "src": "471:24:5"
+              }
+            ],
+            "id": 974,
+            "name": "VariableDeclaration",
+            "src": "471:41:5"
+          },
+          {
+            "attributes": {
+              "constant": false,
+              "name": "addToWhitelist",
+              "payable": false,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "buyer",
+                      "storageLocation": "default",
+                      "type": "address",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address"
+                        },
+                        "id": 975,
+                        "name": "ElementaryTypeName",
+                        "src": "543:7:5"
+                      }
+                    ],
+                    "id": 976,
+                    "name": "VariableDeclaration",
+                    "src": "543:13:5"
+                  }
+                ],
+                "id": 977,
+                "name": "ParameterList",
+                "src": "542:15:5"
+              },
+              {
+                "children": [],
+                "id": 980,
+                "name": "ParameterList",
+                "src": "575:0:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "type": "modifier ()",
+                      "value": "onlyOwner"
+                    },
+                    "id": 978,
+                    "name": "Identifier",
+                    "src": "565:9:5"
+                  }
+                ],
+                "id": 979,
+                "name": "ModifierInvocation",
+                "src": "565:9:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "function (bool)",
+                              "value": "require"
+                            },
+                            "id": 981,
+                            "name": "Identifier",
+                            "src": "585:7:5"
+                          },
+                          {
+                            "attributes": {
+                              "operator": "!=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "type": "address",
+                                  "value": "buyer"
+                                },
+                                "id": 982,
+                                "name": "Identifier",
+                                "src": "593:5:5"
+                              },
+                              {
+                                "attributes": {
+                                  "hexvalue": "307830",
+                                  "subdenomination": null,
+                                  "token": null,
+                                  "type": "int_const 0",
+                                  "value": "0x0"
+                                },
+                                "id": 983,
+                                "name": "Literal",
+                                "src": "602:3:5"
+                              }
+                            ],
+                            "id": 984,
+                            "name": "BinaryOperation",
+                            "src": "593:12:5"
+                          }
+                        ],
+                        "id": 985,
+                        "name": "FunctionCall",
+                        "src": "585:21:5"
+                      }
+                    ],
+                    "id": 986,
+                    "name": "ExpressionStatement",
+                    "src": "585:21:5"
+                  },
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "operator": "=",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "type": "mapping(address => bool)",
+                                  "value": "whitelist"
+                                },
+                                "id": 987,
+                                "name": "Identifier",
+                                "src": "616:9:5"
+                              },
+                              {
+                                "attributes": {
+                                  "type": "address",
+                                  "value": "buyer"
+                                },
+                                "id": 988,
+                                "name": "Identifier",
+                                "src": "626:5:5"
+                              }
+                            ],
+                            "id": 989,
+                            "name": "IndexAccess",
+                            "src": "616:16:5"
+                          },
+                          {
+                            "attributes": {
+                              "hexvalue": "74727565",
+                              "subdenomination": null,
+                              "token": "true",
+                              "type": "bool",
+                              "value": "true"
+                            },
+                            "id": 990,
+                            "name": "Literal",
+                            "src": "635:4:5"
+                          }
+                        ],
+                        "id": 991,
+                        "name": "Assignment",
+                        "src": "616:23:5"
+                      }
+                    ],
+                    "id": 992,
+                    "name": "ExpressionStatement",
+                    "src": "616:23:5"
+                  }
+                ],
+                "id": 993,
+                "name": "Block",
+                "src": "575:71:5"
+              }
+            ],
+            "id": 994,
+            "name": "FunctionDefinition",
+            "src": "519:127:5"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "isWhitelisted",
+              "payable": false,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "buyer",
+                      "storageLocation": "default",
+                      "type": "address",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address"
+                        },
+                        "id": 995,
+                        "name": "ElementaryTypeName",
+                        "src": "719:7:5"
+                      }
+                    ],
+                    "id": 996,
+                    "name": "VariableDeclaration",
+                    "src": "719:13:5"
+                  }
+                ],
+                "id": 997,
+                "name": "ParameterList",
+                "src": "718:15:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool"
+                        },
+                        "id": 998,
+                        "name": "ElementaryTypeName",
+                        "src": "759:4:5"
+                      }
+                    ],
+                    "id": 999,
+                    "name": "VariableDeclaration",
+                    "src": "759:4:5"
+                  }
+                ],
+                "id": 1000,
+                "name": "ParameterList",
+                "src": "758:6:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "mapping(address => bool)",
+                              "value": "whitelist"
+                            },
+                            "id": 1001,
+                            "name": "Identifier",
+                            "src": "782:9:5"
+                          },
+                          {
+                            "attributes": {
+                              "type": "address",
+                              "value": "buyer"
+                            },
+                            "id": 1002,
+                            "name": "Identifier",
+                            "src": "792:5:5"
+                          }
+                        ],
+                        "id": 1003,
+                        "name": "IndexAccess",
+                        "src": "782:16:5"
+                      }
+                    ],
+                    "id": 1004,
+                    "name": "Return",
+                    "src": "775:23:5"
+                  }
+                ],
+                "id": 1005,
+                "name": "Block",
+                "src": "765:40:5"
+              }
+            ],
+            "id": 1006,
+            "name": "FunctionDefinition",
+            "src": "696:109:5"
+          },
+          {
+            "attributes": {
+              "constant": true,
+              "name": "validPurchase",
+              "payable": false,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [],
+                "id": 1007,
+                "name": "ParameterList",
+                "src": "950:2:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "storageLocation": "default",
+                      "type": "bool",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bool"
+                        },
+                        "id": 1008,
+                        "name": "ElementaryTypeName",
+                        "src": "980:4:5"
+                      }
+                    ],
+                    "id": 1009,
+                    "name": "VariableDeclaration",
+                    "src": "980:4:5"
+                  }
+                ],
+                "id": 1010,
+                "name": "ParameterList",
+                "src": "979:6:5"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "operator": "||",
+                          "type": "bool"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "type": "bool",
+                              "type_conversion": false
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "member_name": "validPurchase",
+                                  "type": "function () constant returns (bool)"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "type": "contract super WhitelistedCrowdsale",
+                                      "value": "super"
+                                    },
+                                    "id": 1011,
+                                    "name": "Identifier",
+                                    "src": "1094:5:5"
+                                  }
+                                ],
+                                "id": 1012,
+                                "name": "MemberAccess",
+                                "src": "1094:19:5"
+                              }
+                            ],
+                            "id": 1013,
+                            "name": "FunctionCall",
+                            "src": "1094:21:5"
+                          },
+                          {
+                            "children": [
+                              {
+                                "attributes": {
+                                  "operator": "&&",
+                                  "type": "bool"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "operator": "!",
+                                      "prefix": true,
+                                      "type": "bool"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "type": "bool",
+                                          "type_conversion": false
+                                        },
+                                        "children": [
+                                          {
+                                            "attributes": {
+                                              "type": "function () constant returns (bool)",
+                                              "value": "hasEnded"
+                                            },
+                                            "id": 1014,
+                                            "name": "Identifier",
+                                            "src": "1121:8:5"
+                                          }
+                                        ],
+                                        "id": 1015,
+                                        "name": "FunctionCall",
+                                        "src": "1121:10:5"
+                                      }
+                                    ],
+                                    "id": 1016,
+                                    "name": "UnaryOperation",
+                                    "src": "1120:11:5"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "type": "bool",
+                                      "type_conversion": false
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "type": "function (address) constant returns (bool)",
+                                          "value": "isWhitelisted"
+                                        },
+                                        "id": 1017,
+                                        "name": "Identifier",
+                                        "src": "1135:13:5"
+                                      },
+                                      {
+                                        "attributes": {
+                                          "member_name": "sender",
+                                          "type": "address"
+                                        },
+                                        "children": [
+                                          {
+                                            "attributes": {
+                                              "type": "msg",
+                                              "value": "msg"
+                                            },
+                                            "id": 1018,
+                                            "name": "Identifier",
+                                            "src": "1149:3:5"
+                                          }
+                                        ],
+                                        "id": 1019,
+                                        "name": "MemberAccess",
+                                        "src": "1149:10:5"
+                                      }
+                                    ],
+                                    "id": 1020,
+                                    "name": "FunctionCall",
+                                    "src": "1135:25:5"
+                                  }
+                                ],
+                                "id": 1021,
+                                "name": "BinaryOperation",
+                                "src": "1120:40:5"
+                              }
+                            ],
+                            "id": 1022,
+                            "name": "TupleExpression",
+                            "src": "1119:42:5"
+                          }
+                        ],
+                        "id": 1023,
+                        "name": "BinaryOperation",
+                        "src": "1094:67:5"
+                      }
+                    ],
+                    "id": 1024,
+                    "name": "Return",
+                    "src": "1075:86:5"
+                  }
+                ],
+                "id": 1025,
+                "name": "Block",
+                "src": "986:182:5"
+              }
+            ],
+            "id": 1026,
+            "name": "FunctionDefinition",
+            "src": "928:240:5"
+          }
+        ],
+        "id": 1027,
+        "name": "ContractDefinition",
+        "src": "314:856:5"
+      }
+    ],
+    "name": "SourceUnit"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.11+commit.68ef5810.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.8",
+  "updatedAt": "2022-08-30T10:55:27.452Z",
+  "devdoc": {
+    "methods": {
+      "transferOwnership(address)": {
+        "details": "Allows the current owner to transfer control of the contract to a newOwner.",
+        "params": {
+          "newOwner": "The address to transfer ownership to."
+        }
+      }
+    },
+    "title": "WhitelistedCrowdsale"
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

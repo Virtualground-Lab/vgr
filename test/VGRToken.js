@@ -6,7 +6,7 @@ const VGRToken = artifacts.require("./VGRToken.sol");
 
 const BigNumber = web3.BigNumber;
 
-contract("VGRCrowdsale", function ([owner, holder]) {
+describe("VGRCrowdsale", function ([owner, holder]) {
   let token;
 
   beforeEach(async function () {

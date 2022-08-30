@@ -8,7 +8,7 @@ const VGRToken = artifacts.require("./VGRToken.sol");
 
 const BigNumber = web3.BigNumber;
 
-contract("VGRContinuousSale", function ([owner, wallet, buyer, wallet2]) {
+describe("VGRContinuousSale", function ([owner, wallet, buyer, wallet2]) {
   const rate = new BigNumber(1);
   const newRate = new BigNumber(2);
   const value = new BigNumber(100);
